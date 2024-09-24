@@ -349,7 +349,7 @@ impl<T: Read + Write> Client<T> {
             conn: Connection {
                 stream: BufStream::new(stream),
                 tag: INITIAL_TAG,
-                debug: false,
+                debug: true,
                 greeting_read: false,
             },
         }
