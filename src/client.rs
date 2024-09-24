@@ -1267,11 +1267,24 @@ impl<T: Read + Write> Session<T> {
             .and_then(|lines| parse_id_set(&lines, &mut self.unsolicited_responses_tx))
     }
 
+    /// Similar to [`Session::search`], but performs the search using the UTF-8 character set.
+    pub fn search_utf8(&mut self, query: impl AsRef<str>) -> Result<HashSet<Seq>> {
+        self.run_command_and_read_response(&format!("SEARCH CHARSET UTF-8 {}", query.as_ref()))
+            .and_then(|lines| parse_id_set(&lines, &mut self.unsolicited_responses_tx))
+    }
+
     /// Equivalent to [`Session::search`], except that the returned identifiers
     /// are [`Uid`] instead of [`Seq`]. See also the [`UID`
     /// command](https://tools.ietf.org/html/rfc3501#section-6.4.8).
     pub fn uid_search(&mut self, query: impl AsRef<str>) -> Result<HashSet<Uid>> {
         self.run_command_and_read_response(&format!("UID SEARCH {}", query.as_ref()))
+            .and_then(|lines| parse_id_set(&lines, &mut self.unsolicited_responses_tx))
+    }
+
+
+    /// Similar to [`Session::uid_search`], but performs the search using the UTF-8 character set.
+    pub fn uid_search_utf8(&mut self, query: impl AsRef<str>) -> Result<HashSet<Uid>> {
+        self.run_command_and_read_response(&format!("UID SEARCH CHARSET UTF-8 {}", query.as_ref()))
             .and_then(|lines| parse_id_set(&lines, &mut self.unsolicited_responses_tx))
     }
 
